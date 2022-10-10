@@ -1,46 +1,59 @@
 import React, { useState } from "react";
+import Zoom from '@mui/material/Zoom';
+import AddIcon from '@mui/icons-material/Add';
 
 function CreateArea(props) {
-  const [note, setnote] = useState({
-    title:"",
-    content:""
+  const [note, setNote] = useState({
+    title: "",
+    content: ""
   });
+  const [pressed, setpressed] = useState(false);
 
-  function handleevent(event){
-    const {name , value} = event.target;
+  function handleChange(event) {
+    const { name, value } = event.target;
 
-    setnote(prevValue =>{
-        return {
-            ...prevValue,
-            [name]:value
-        }
-    })
+    setNote(prevNote => {
+      return {
+        ...prevNote,
+        [name]: value
+      };
+    });
   }
 
-  function submitNote(event){
+  function submitNote(event) {
     props.onAdd(note);
-    setnote({title:"",content:""});
-   // console.log("isme");
+    setNote({
+      title: "",
+      content: ""
+    });
     event.preventDefault();
+  }
+
+  function dikhao(){
+    setpressed(true);
   }
 
   return (
     <div>
-      <form>
-        <input 
-        onChange={handleevent} 
-        name="title" 
-        placeholder="Title" 
-        value={note.title}/>
-
-        <textarea name="content" 
-        placeholder="Take a note..." 
-        rows="3" 
-        value={note.content} 
-        onChange={handleevent}
+      <form className="create-note">
+        {pressed && <input
+          name="title"
+          onChange={handleChange}
+          
+          value={note.title}
+          placeholder="Title"
+        />}
+        <textarea
+          name="content"
+          onClick={dikhao}
+          onChange={handleChange}
+          value={note.content}
+          placeholder="Take a note..."
+          rows={pressed ? 3 : 1}
         />
-
-        <button onClick={submitNote}>Add</button>
+        <Zoom in={pressed}>
+        <button onClick={submitNote}><AddIcon/></button>
+        </Zoom>
       </form>
     </div>
   );
